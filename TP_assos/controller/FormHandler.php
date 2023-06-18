@@ -64,11 +64,16 @@
     if (isset($_POST['ModifierLivre'])) {
 
         // récupère les informations du formulaire
-        $id = $_POST['bookId'];
+        $idBook = $_POST['bookId'];
+        $idUser = $_POST['userId'];
         $newTitle = $_POST['bookTitle'];
         $author = $_POST['bookAuthor'];
         $genre = $_POST['bookGenre'];
-        $available = $_POST['bookAvailable'];
+        if ($_POST['bookAvailable'] == "disponible") {
+            $available = 1;
+        } else {
+            $available = 0;
+        }
         $borrower = $_POST['bookBorrower'];
         $borrowStart = $_POST['bookBorrowStart'];
         $borrowEnd = $_POST['bookBorrowEnd'];
@@ -77,7 +82,8 @@
         if (!empty($newTitle)) {
             // cas où le titre est renseigné
             // créer un livre et lance la modification
-            $updatedBook = Book::fullBook($id, $newTitle, $author, $genre, $available, $borrower, $borrowStart, $borrowEnd);
+            $updatedBook = Book::fullBook($idBook, $newTitle, $author, $genre, $available, $borrower, $borrowStart, $borrowEnd);
+            $bookController->updateBorrow($idUser, $updatedBook);
             $bookController->update($updatedBook);
         } else {
             // cas où le titre n'est pas renseigné

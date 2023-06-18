@@ -80,6 +80,26 @@
         }
 
         /**
+         * Charge un livre à partir d'un identifiant
+         * 
+		 * @var int $pId 
+         */
+        function loadById($pId) {
+
+            $customColumnNames = ['Id', 'Titre', 'Auteur', 'Genre', 'Disponible/Réserver', 'Date Emprunt', 'Date Retour'];
+            // créer le dao des livres
+            $bookDao = new BookDao();
+
+            // récupère le livre en BDD
+            $book = $bookDao->loadBookByID($pId);
+            // change le tableau en tableau associatif avec les noms des champs
+            $book = array_combine($customColumnNames, $book);
+
+            // retourne le livre
+            return $book;
+        }
+
+        /**
          * Modifie la couleur du texte 'Disponible/Réserver'
          * 
 		 * @var string $pColumnName 
@@ -169,6 +189,40 @@
 
                 // redirige vers la liste des livres
                 header("Location:../ListeLivres.php");
+            } else {
+                // cas où le livre n'existe pas en BDD
+                // lance une popup pour l'indiquer à l'utilisateur
+                // et le renvoie à la page de la liste des livres
+                echo '<script type="text/javascript">'; 
+                echo 'alert("Le livre '.$pUpdatedBook->getTitle().' n\'existe pas en base de données. Modification impossible.");';
+                echo 'window.location.href = "../ListeLivres.php";';
+                echo '</script>';
+            }
+        }
+
+        /**
+         * Met à jour un livre
+         * 
+		 * @var int $pIdUser
+		 * @var Book $pUpdatedBook 
+         */
+        function updateBorrow($pIdUser, $pUpdatedBook) {
+
+            // créer le dao des livres
+            $bookDao = new BookDao();
+
+            // récupère un livre à partir de l'identifiant en BDD
+            $bookBDD = $bookDao->getById($pUpdatedBook->getId());
+
+            // vérifie si le livre existe déjà en BDD
+            if ($bookBDD != null) {
+                // cas où le livre existe en BDD
+                // lance la modification
+                if (!$pUpdatedBook->isAvailable()) {
+                    $bookDao->insertBorrowByIdBook($pIdUser, $pUpdatedBook);
+                } else {
+                    $bookDao->deleteBorrowByIdBook($pIdUser, $pUpdatedBook->getId());
+                }
             } else {
                 // cas où le livre n'existe pas en BDD
                 // lance une popup pour l'indiquer à l'utilisateur

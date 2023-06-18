@@ -46,10 +46,10 @@
                         <td>
                             <div class="row">
                                 <div class="col-4">
-                                    <a class="btn btn-outline-dark" href="Livre.php?type=Ouvrir&idBook=<?= $listBook[$i][$columnsNames[0]]?>"><i class="fa-solid fa-circle-info fa-lg"></i></a>
+                                    <a class="btn btn-outline-dark" href="Livre.php?type=Ouvrir&idBook=<?= $listBook[$i][$columnsNames[0]]?>&available=<?= $listBook[$i][$columnsNames[4]]?>"><i class="fa-solid fa-circle-info fa-lg"></i></a>
                                 </div>
                                 <div class="col-4">
-                                    <a class="btn btn-outline-dark" href="Livre.php?type=Modifier&idBook=<?= $listBook[$i][$columnsNames[0]]?>"><i class="fa-solid fa-pencil fa-lg"></i></a>
+                                    <a class="btn btn-outline-dark" href="Livre.php?type=Modifier&idBook=<?= $listBook[$i][$columnsNames[0]]?>&available=<?= $listBook[$i][$columnsNames[4]]?>"><i class="fa-solid fa-pencil fa-lg"></i></a>
                                 </div>
                                 <div class="col-4">
                                     <form  action="./controller/FormHandler.php" method="post">

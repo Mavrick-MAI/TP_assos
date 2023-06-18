@@ -47,6 +47,38 @@
         }
 
         /**
+         * Charge un livre à partir d'un identifiant
+         * 
+		 * @var int $pId 
+         */
+		function loadBookByID($pId) {
+            
+            //créer la connexion à la BDD
+            $dbConnexion = Connexion::getConnexion();
+
+            try {
+                // créer la requête sql
+                $request = "SELECT id, title, author, genre, available, date_emprunt, date_retour_prevu FROM book INNER JOIN emprunt ON book.id = emprunt.id_livre where id=?";
+
+                // prépare et exécute la requête 
+                $stmt = $dbConnexion->prepare($request);
+                $stmt->execute([$pId]);
+
+                // récupère le livre
+                $result = $stmt->setFetchMode(PDO::FETCH_NUM);
+                $book = $stmt->fetchAll();
+            } catch(PDOException $e) {
+                echo "Error: " . $e->getMessage();
+            }
+
+            // ferme la connexion à la BDD
+            $dbConnexion = null;
+
+            // retourne le livre
+            return $book[0];
+        }
+
+        /**
          * Récupère un livre à partir d'un titre
          * 
 		 * @var string $pTitle 
@@ -172,7 +204,7 @@
             
             //créer la connexion à la BDD
             $dbConnexion = Connexion::getConnexion();
-
+    
             try {
                 // créer la requête sql
                 $request = "UPDATE book SET title=?, author=?, genre=?, available=? WHERE id=?";
@@ -188,6 +220,62 @@
             // ferme la connexion à la BDD
             $dbConnexion = null;
 
+        }
+
+        /**
+         * Met à jour un emprunt à partir d'un identifiant utilisateur et d'un livre
+         * 
+		 * @var int $pIdUser 
+		 * @var Book $pUpdatedBook 
+         */
+		function insertBorrowByIdBook($pIdUser, $pUpdatedBook) {
+            
+            //créer la connexion à la BDD
+            $dbConnexion = Connexion::getConnexion();
+    
+            try {
+                // créer la requête sql
+                $request = "INSERT INTO emprunt (id_membre, id_livre, date_emprunt, date_retour_prevu) VALUES (?,?,?,?)";
+
+                // prépare et exécute la requête
+                $stmt = $dbConnexion->prepare($request);
+                $stmt->execute([$pIdUser, $pUpdatedBook->getId(), $pUpdatedBook->getDateEmprunt(), $pUpdatedBook->getDateRetour()]);
+                 
+            } catch(PDOException $e) {
+                echo "Error: " . $e->getMessage();
+            }
+            
+            // ferme la connexion à la BDD
+            $dbConnexion = null;
+
+        }
+
+        /**
+         * Supprime un emprunt à partir d'un identifiant utilisateur et un identifiant de livre
+         * 
+		 * @var int $pIdUser
+		 * @var int $pIdBook
+         */
+		function deleteBorrowByIdBook($pIdUser, $pIdBook) {
+            
+            //créer la connexion à la BDD
+            $dbConnexion = Connexion::getConnexion();
+
+            try {
+                // créer la requête sql
+                $request = "DELETE FROM emprunt WHERE id_membre=? and id_livre=?";
+
+                // prépare et exécute la requête
+                $stmt = $dbConnexion->prepare($request);
+                $stmt->execute([$pIdUser, $pIdBook]);
+                 
+            } catch(PDOException $e) {
+                echo "Error: " . $e->getMessage();
+            }
+            
+            // ferme la connexion à la BDD
+            $dbConnexion = null;
+            
         }
 
         /**

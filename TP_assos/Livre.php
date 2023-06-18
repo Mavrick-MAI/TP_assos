@@ -24,10 +24,16 @@
     if (isset($params['idBook'])) {
         // récupère l'identifiant
         $idBook = $params['idBook'];
+        // récupère la dispo
+        $available = $params['available'];
         // créer le controller des livres
         $bookController = new BookController();
         // récupère le livre à partir de l'identifiant
-        $book = $bookController->getById($idBook);
+        if (strcmp($available, "Réserver") == 0) {
+            $book = $bookController->loadById($idBook);
+        } else {
+            $book = $bookController->getById($idBook);
+        }
     }
 ?>
 
@@ -64,18 +70,15 @@
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label for="bookBorrower">Emprunteur</label>
-                                <input type="text" class="form-control" name="bookBorrower" id="bookBorrower">
-                            </div>
-                            <div class="mb-3">
                                 <label for="bookBorrowStart">Date de l'emprunt</label>
-                                <input type="date" class="form-control" name="bookBorrowStart" id="bookBorrowStart">
+                                <input type="date" class="form-control" name="bookBorrowStart" id="bookBorrowStart" value="<?= strcmp($available, "Réserver") == 0 ? $book['Date Emprunt'] : "" ?>" >
                             </div>
                             <div class="mb-4">
                                 <label for="bookBorrowEnd">Date de retour prévu</label>
-                                <input type="date" class="form-control" name="bookBorrowEnd" id="bookBorrowEnd">
+                                <input type="date" class="form-control" name="bookBorrowEnd" id="bookBorrowEnd" value="<?= strcmp($available, "Réserver") == 0 ? $book['Date Retour'] : "" ?>">
                             </div>
                             <input type="hidden" name="bookId" id="bookId" value="<?= $book['Id'] ?>">
+                            <input type="hidden" name="userId" id="userId" value="<?= $_SESSION['user'][0] ?>">
                         <?php endif; ?>
                     <a class="btn btn-warning" href="ListeLivres.php" role="button">Retour à la liste</a>
                     <input type="submit" class="btn btn-success" name="<?=$actionType?>Livre" value="Valider" />
@@ -111,24 +114,18 @@
                     <p><?=$book['Disponible/Réserver'] ? "Disponible" : "Réservé" ?></p>
                 </div>
             </div>
-            <?php if(false) : ?>
+            <?php if(isset($_SESSION['user'])) : ?>
             <div class="row mb-4 justify-content-center">
                 <div class="col-4">
-                    <h3 class="border border-black rounded">Emprunteur</h3>
-                    <p><? isset($book['Emprunteur']) ? $book['Emprunteur'] : "" ?></p>
+                    <h3 class="border border-black rounded">Date de l'emprunt</h3>
+                    <p><?= strcmp($available, "Réserver") == 0 ? $book['Date Emprunt'] : "" ?></p>
                 </div>
                 <div class="col-4">
-                    <h3 class="border border-black rounded">Date de l'emprunt</h3>
-                    <p><? isset($book['DateEmprunt']) ? $book['DateEmprunt'] : "" ?></p>
+                    <h3 class="border border-black rounded">Date de retour prévu</h3>
+                    <p><?= strcmp($available, "Réserver") == 0 ? $book['Date Retour'] : "" ?></p>
                 </div>
             </div>
             <?php endif; ?>
-            <div class="row mb-4 justify-content-center">
-                <div class="col-4">
-                    <h3 class="border border-black rounded">Date de retour prévu</h3>
-                    <p><? isset($book['DateRetour']) ? $book['DateRetour'] : "" ?></p>
-                </div>
-            </div>
         </div>
     <?php endif; ?>
 
