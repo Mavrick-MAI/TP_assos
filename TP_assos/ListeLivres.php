@@ -22,7 +22,7 @@
     <div class="text-left mb-2">
         <a class="btn btn-primary" href="Livre.php?type=Ajouter" role="button">Ajouter un livre</a>
     </div>
-    <div class="table-responsive text-center">
+    <div class="table-responsive text-center" style="overflow:hidden;">
         <table class="display table table-bordered align-middle">
             <thead>
                 <tr>
@@ -36,7 +36,7 @@
                 <?php for ($i = 0; $i < count($listBook); $i++) : ?>
                     <tr data-id="<?= $listBook[$i][$columnsNames[0]]?>">
                         <?php for ($y = 1; $y < count($listBook[$i]); $y++) : ?>
-                            <td <?=$bookController->setAvailableColor($columnsNames[$y], $listBook[$i][$columnsNames[$y]])?> ><?php echo $listBook[$i][$columnsNames[$y]]?></td>      
+                            <td <?=$bookController->setAvailableColor($columnsNames[$y], $listBook[$i][$columnsNames[$y]], false)?> ><?php echo $listBook[$i][$columnsNames[$y]]?></td>      
                         <?php endfor; ?> 
                         <td>
                             <div class="row">

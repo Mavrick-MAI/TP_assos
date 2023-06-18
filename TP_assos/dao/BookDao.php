@@ -15,35 +15,6 @@
         private $dbConnexion;
 
         /**
-         * Récupère la liste complète des livres
-         */
-		function getListBook() {
-            
-            //créer la connexion à la BDD
-            $dbConnexion = Connexion::getConnexion();
-
-            try {
-                // créer la requête sql
-                $request = "SELECT * FROM book";
-
-                // prépare et exécute la requête 
-                $stmt = $dbConnexion->prepare($request);
-                $stmt->execute();
-
-                // récupère la liste des livres
-                $listBook = $stmt->setFetchMode(PDO::FETCH_NUM);
-                $listBook = $stmt->fetchAll();
-            } catch(PDOException $e) {
-                echo "Error: " . $e->getMessage();
-            }
-            // ferme la connexion à la BDD
-            $dbConnexion = null;
-
-            // retourne la liste de livres
-            return $listBook;
-        }
-
-        /**
          * Récupère un livre à partir d'un identifiant
          * 
 		 * @var int $pId 
@@ -105,6 +76,64 @@
 
             // retourne le livre
             return $book;
+        }
+
+        /**
+         * Récupère la liste complète des livres
+         */
+		function getListBook() {
+            
+            //créer la connexion à la BDD
+            $dbConnexion = Connexion::getConnexion();
+
+            try {
+                // créer la requête sql
+                $request = "SELECT * FROM book";
+
+                // prépare et exécute la requête 
+                $stmt = $dbConnexion->prepare($request);
+                $stmt->execute();
+
+                // récupère la liste des livres
+                $listBook = $stmt->setFetchMode(PDO::FETCH_NUM);
+                $listBook = $stmt->fetchAll();
+            } catch(PDOException $e) {
+                echo "Error: " . $e->getMessage();
+            }
+            // ferme la connexion à la BDD
+            $dbConnexion = null;
+
+            // retourne la liste de livres
+            return $listBook;
+        }
+        
+        /**
+         * Récupère la liste des six derniers livres
+         */
+		function getListLastBook() {
+            
+            //créer la connexion à la BDD
+            $dbConnexion = Connexion::getConnexion();
+
+            try {
+                // créer la requête sql
+                $request = "SELECT * FROM book ORDER BY id DESC LIMIT 6";
+
+                // prépare et exécute la requête 
+                $stmt = $dbConnexion->prepare($request);
+                $stmt->execute();
+
+                // récupère la liste des livres
+                $listBook = $stmt->setFetchMode(PDO::FETCH_NUM);
+                $listBook = $stmt->fetchAll();
+            } catch(PDOException $e) {
+                echo "Error: " . $e->getMessage();
+            }
+            // ferme la connexion à la BDD
+            $dbConnexion = null;
+
+            // retourne la liste de livres
+            return $listBook;
         }
 
         /**

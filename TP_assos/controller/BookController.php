@@ -3,7 +3,7 @@
     require_once __DIR__.'/../dao/BookDao.php';
 
     /**
-     * Modélise la couche de contrôle et de mise en forme des données
+     * Modélise la couche de contrôle et de mise en forme des données des livres
      */
     class BookController {
 
@@ -22,6 +22,30 @@
 
             // récupère la liste des livres en BDD
             $listBook = $bookDao->getListBook();
+
+            // les livres sont des tableaux avec index
+            // itére sur la liste de livre
+            for ($i = 0; $i < count($listBook); $i++) {
+                // change les tableaux en tableaux associatifs avec les noms des champs
+                $listBook[$i] = array_combine(self::$columnNames, $listBook[$i]);
+                // change la valeur du champ 'Disponible/Réserver' (0 / 1) par le string correspondant (Réserver / Disponible)
+                $listBook[$i]['Disponible/Réserver'] ? $listBook[$i]['Disponible/Réserver'] = "Disponible" : $listBook[$i]['Disponible/Réserver']="Réserver";
+            }
+
+            // retourne la liste
+            return $listBook;
+        }
+
+        /**
+         * Récupère la liste des derniers livres
+         */
+        function getListLast() {
+
+            // créer le dao des livres
+            $bookDao = new BookDao();
+
+            // récupère la liste des livres en BDD
+            $listBook = $bookDao->getListLastBook();
 
             // les livres sont des tableaux avec index
             // itére sur la liste de livre
@@ -60,21 +84,34 @@
          * 
 		 * @var string $pColumnName 
 		 * @var string $pAvailable 
+		 * @var boolean $pClass 
          */
-        function setAvailableColor($pColumnName, $pAvailable) {
+        function setAvailableColor($pColumnName, $pAvailable, $pClass) {
 
             // vérifie le nom de la colonne
             if ($pColumnName == 'Disponible/Réserver') {
 
-                // vérifie la valeur
-                switch ($pAvailable) {
-
-                    // modifie la couleur
-                    case 'Disponible':
-                        return "class='text-success'";
-                    case 'Réserver':
-                        return "class='text-danger'";
-                }  
+                if (!$pClass) {
+                    // vérifie la valeur
+                    switch ($pAvailable) {
+    
+                        // modifie la couleur
+                        case 'Disponible':
+                            return "class='text-success'";
+                        case 'Réserver':
+                            return "class='text-danger'";
+                    }  
+                } else {
+                    // vérifie la valeur
+                    switch ($pAvailable) {
+    
+                        // modifie la couleur
+                        case 'Disponible':
+                            return 'text-success';
+                        case 'Réserver':
+                            return 'text-danger';
+                    }
+                }
             }
             
         }
@@ -126,7 +163,7 @@
 
             // vérifie si le livre existe déjà en BDD
             if ($bookBDD != null) {
-                // cas où le livre n'existe pas en BDD
+                // cas où le livre existe en BDD
                 // lance la modification
                 $bookDao->updateById($pUpdatedBook);
 
@@ -156,7 +193,7 @@
             $bookDao = new BookDao();
 
             // lance la suppression
-            $bookBDD = $bookDao->deleteById($pId);
+            $bookDao->deleteById($pId);
 
             // redirige vers la page de la liste des livres
             header("Location:../ListeLivres.php");
