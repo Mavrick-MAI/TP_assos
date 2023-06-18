@@ -5,7 +5,7 @@
 
 <!-- Page de consultation, ajout, modification d'un member -->
 
-<?php 
+<?php
 
     // récupère l'URL de la page actuelle
     $actual_link = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
@@ -41,7 +41,7 @@
                 <h1 class="my-4"><?=$actionType?> un membre</h1>
             <?php endif; ?>
 
-            <div class="row justify-content-center">
+            <div class="row justify-content-center text-start">
                 <form class="col-sm-12 col-lg-6" action="./controller/FormHandler.php" method="post">
 
                     <?php if ($actionType == 'Modifier') : ?>

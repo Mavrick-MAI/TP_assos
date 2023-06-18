@@ -46,6 +46,33 @@
             return $member[0];
         }
 
+		function getByIdRecup($pId) {
+            
+            //créer la connexion à la BDD
+            $dbConnexion = Connexion::getConnexion();
+
+            try {
+                // créer la requête sql
+                $request = "SELECT question_secrete, reponse_secrete FROM membre where id=?";
+
+                // prépare et exécute la requête 
+                $stmt = $dbConnexion->prepare($request);
+                $stmt->execute([$pId]);
+
+                // récupère le membre
+                $result = $stmt->setFetchMode(PDO::FETCH_NUM);
+                $member = $stmt->fetchAll();
+            } catch(PDOException $e) {
+                echo "Error: " . $e->getMessage();
+            }
+
+            // ferme la connexion à la BDD
+            $dbConnexion = null;
+
+            // retourne le membre
+            return $member[0];
+        }
+
         /**
          * Récupère un membre à partir d'un email
          * 
@@ -178,6 +205,34 @@
                 // prépare et exécute la requête
                 $stmt = $dbConnexion->prepare($request);
                 $stmt->execute([$pId]);
+                 
+            } catch(PDOException $e) {
+                echo "Error: " . $e->getMessage();
+            }
+            
+            // ferme la connexion à la BDD
+            $dbConnexion = null;
+            
+        }
+
+        /**
+         * Change le mot de passe d'un membre à partir d'un identifiant
+         * 
+		 * @var int $pId
+		 * @var string $pPassword 
+         */
+		function changePasswordById($pId, $pPassword) {
+            
+            //créer la connexion à la BDD
+            $dbConnexion = Connexion::getConnexion();
+
+            try {
+                // créer la requête sql
+                $request = "UPDATE membre SET password=? WHERE id=?";
+
+                // prépare et exécute la requête
+                $stmt = $dbConnexion->prepare($request);
+                $stmt->execute([$pPassword, $pId]);
                  
             } catch(PDOException $e) {
                 echo "Error: " . $e->getMessage();

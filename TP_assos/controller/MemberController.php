@@ -51,6 +51,35 @@
             // retourne le membre
             return $membre;
         }
+        
+        function getByIdRecup($pId) {
+
+            // créer le dao des membres
+            $memberDao = new MemberDao();
+
+            // récupère le membre en BDD
+            $membre = $memberDao->getByIdRecup($pId);
+
+            // retourne le membre
+            return $membre;
+        }
+
+        /**
+         * Retourne un membre à partir d'un email
+         * 
+		 * @var string $pEmail 
+         */
+        function getByEmail($pEmail) {
+
+            // créer le dao des membres
+            $memberDao = new MemberDao();
+
+            // récupère le membre en BDD
+            $membre = $memberDao->getByEmail($pEmail);
+
+            // retourne le membre
+            return $membre[0];
+        }
 
         /**
          * Insère un nouveau membre
@@ -133,6 +162,25 @@
 
             // redirige vers la page de la liste des membres
             header("Location:../ListeMembres.php");
+
+        }
+
+        /**
+         * Change le mot de passe d'un membre
+         * 
+		 * @var int $pId 
+		 * @var string $pPassword 
+         */
+        function changePassword($pId, $pPassword) {
+
+            // créer le dao des membres
+            $memberDao = new MemberDao();
+
+            // lance le changement de mot de passe
+            $memberDao->changePasswordById($pId, $pPassword);
+
+            // redirige vers la page de connexion
+            header("Location:../SeConnecter.php");
 
         }
 

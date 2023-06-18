@@ -5,7 +5,7 @@
 
 <!-- Page de la liste des livres -->
 
-<?php 
+<?php
     // créer le controller des livres
     $bookController = new BookController();
 
@@ -19,9 +19,11 @@
 
     <h1 class="my-4 text-center">Liste des livres</h1>
     
-    <div class="text-left mb-2">
-        <a class="btn btn-primary" href="Livre.php?type=Ajouter" role="button">Ajouter un livre</a>
-    </div>
+    <?php if (isset($_SESSION['user'])) : ?>
+        <div class="text-left mb-2">
+            <a class="btn btn-primary" href="Livre.php?type=Ajouter" role="button">Ajouter un livre</a>
+        </div>
+    <?php endif; ?> 
     <div class="table-responsive text-center" style="overflow:hidden;">
         <table class="display table table-bordered align-middle">
             <thead>
@@ -29,7 +31,9 @@
                     <?php for ($i = 1; $i < count($columnsNames); $i++) : ?>
                         <th scope="col"><?php echo $columnsNames[$i]?></th>      
                     <?php endfor; ?> 
-                    <th scope="col">Actions</th>  
+                    <?php if (isset($_SESSION['user'])) : ?>
+                        <th scope="col">Actions</th>
+                    <?php endif; ?>  
                 </tr>
             </thead>
             <tbody class="table-group-divider">
@@ -38,6 +42,7 @@
                         <?php for ($y = 1; $y < count($listBook[$i]); $y++) : ?>
                             <td <?=$bookController->setAvailableColor($columnsNames[$y], $listBook[$i][$columnsNames[$y]], false)?> ><?php echo $listBook[$i][$columnsNames[$y]]?></td>      
                         <?php endfor; ?> 
+                        <?php if (isset($_SESSION['user'])) : ?>
                         <td>
                             <div class="row">
                                 <div class="col-4">
@@ -54,6 +59,7 @@
                                 </div>
                             </div>
                         </td>
+                        <?php endif; ?>
                     </tr>      
                 <?php endfor; ?> 
             </tbody>

@@ -5,8 +5,11 @@
 
 <!-- Page de consultation, ajout, modification d'un livre -->
 
-<?php 
+<?php
 
+    if (!isset($_SESSION['user'])) {
+        header("Location:Accueil.php");
+    }
     // récupère l'URL de la page actuelle
     $actual_link = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 
@@ -36,11 +39,11 @@
         <div class="text-center">
             <h1 class="my-4"><?=$actionType?> un livre</h1>
 
-            <div class="row justify-content-center">
+            <div class="row justify-content-center text-start">
                 <form class="col-sm-12 col-lg-6" action="./controller/FormHandler.php" method="post">
                     <div class="mb-3">
-                        <label for="bookTitle" class="form-label">Titre</label>
-                        <input type="text" class="form-control" id="bookTitle" name="bookTitle" value="<?= isset($params['idBook']) ? $book['Titre'] : "" ?>" />
+                        <label for="bookTitle" class="form-label control-label">Titre</label>
+                        <input type="text" class="form-control" id="bookTitle" name="bookTitle" required value="<?= isset($params['idBook']) ? $book['Titre'] : "" ?>" />
                     </div>
                     <div class="mb-3">
                         <label for="bookAuthor" class="form-label">Auteur</label>

@@ -5,7 +5,7 @@
 
 <!-- Page d'accueil -->
 
-<?php 
+<?php
     // créer le controller des livres
     $bookController = new BookController();
 

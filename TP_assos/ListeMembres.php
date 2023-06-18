@@ -4,8 +4,11 @@
 <?php require_once 'controller/MemberController.php'; ?>
 
 <!-- Page de la liste des membres -->
+<?php
 
-<?php 
+    if (!isset($_SESSION['user'])) {
+        header("Location:Accueil.php");
+    }
     // créer le controller des membres
     $memberController = new MemberController();
 
@@ -34,7 +37,7 @@
                     <tr data-id="<?= $listMembre[$i][$columnsNames[0]]?>">
                         <?php for ($y = 1; $y < count($listMembre[$i]); $y++) : ?>
                             <td><?php echo $listMembre[$i][$columnsNames[$y]]?></td>      
-                        <?php endfor; ?> 
+                        <?php endfor; ?>
                         <td>
                             <div class="row">
                                 <div class="col-4">
@@ -58,6 +61,5 @@
     </div>
 
 </div>
-
-
+ 
 <?php include_once 'parts/footer.php';

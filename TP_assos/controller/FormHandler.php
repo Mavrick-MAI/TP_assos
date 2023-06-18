@@ -4,11 +4,12 @@
     require_once '../models/Member.php';
     require_once '../controller/BookController.php';
     require_once '../controller/MemberController.php';
+    require_once '../controller/ConnexionController.php';
 
     /**
      * "Controller" intermédiaire qui gère les soumissions de formulaires,
      * effectue des contrôles quand nécéssaire ou possible,
-     * et appelle les controllers adéquates afin de poursuivre le traitement.     * 
+     * et appelle les controllers adéquates afin de poursuivre le traitement. 
      */
 
      /**
@@ -19,6 +20,12 @@
      * Controller des membres
      */
     $memberController = new MemberController();
+    /**
+     * Controller des connexions
+     */
+    $connexionController = new ConnexionController();
+
+    session_start();
 
     /*****************************************************/
     /**************** Gestion des livres *****************/
@@ -224,4 +231,116 @@
         
         return $errorMessage;
     } 
+
+    /**
+     * Soumission d'un formulaire de connexion
+     */
+    if (isset($_POST['seConnecter'])) {
+
+        // récupère l'email
+        $email = $_POST['memberEmail'];
+        // récupère le mot de passe
+        $password = $_POST['memberPassword'];
+
+        if ($email && $password) {
+            // lance la connexion
+            $connexionController->connectMember($email, $password);
+        } else {
+            echo '<script type="text/javascript">'; 
+            echo 'alert("Tout les champs doivent être renseignés.");';
+            echo 'window.location.href = "../SeConnecter.php";';
+            echo '</script>';
+        }
+    } 
+
+    /**
+     * Soumission d'un formulaire de récupération - étape email
+     */
+    if (isset($_POST['recupStepEmail'])) {
+
+        // récupère l'email
+        $email = $_POST['memberEmail'];
+
+        if ($email) {
+            // récupère le membre en BDD
+            $membre = $memberController->getByEmail($email);
+
+            if ($membre) {
+                header("Location:../MotDePasseOublie.php?id=".$membre[0]);
+            } else {
+                echo '<script type="text/javascript">'; 
+                echo 'alert("Aucun utilisateur enregistré utilise l\'email : '.$email.'.");';
+                echo 'window.location.href = "../MotDePasseOublie.php";';
+                echo '</script>';
+            }
+        } else {
+            echo '<script type="text/javascript">'; 
+            echo 'alert("L\'email doit être renseigné.");';
+            echo 'window.location.href = "../MotDePasseOublie.php";';
+            echo '</script>';
+        }
+    } 
+
+    /**
+     * Soumission d'un formulaire de récupération - étape secrète
+     */
+    if (isset($_POST['recupStepSecret'])) {
+
+        // récupère la réponse secrète
+        $reponseSecrete = $_POST['memberSecretAnswer'];
+        // récupère l'identifiant
+        $id = $_POST['id'];
+
+        if ($reponseSecrete) {
+            // récupère le membre en BDD
+            $membre = $memberController->getByIdRecup($id);
+
+            if ($membre && strcmp($membre[1], $reponseSecrete) == 0) {
+                header("Location:../MotDePasseOublie.php?id=".$id."&reset=true");
+            } else {
+                echo '<script type="text/javascript">'; 
+                echo 'alert("Ce n\'est pas la bonne réponse.");';
+                echo 'window.location.href = "../MotDePasseOublie.php?id='.$id.'";';
+                echo '</script>';
+            }
+        } else {
+            echo '<script type="text/javascript">'; 
+            echo 'alert("Vous devez répondre à la question secrète.");';
+            echo 'window.location.href = "../MotDePasseOublie.php";';
+            echo '</script>';
+        }
+    } 
+
+    /**
+     * Soumission d'un formulaire de récupération - étape secrète
+     */
+    if (isset($_POST['recupStepPassword'])) {
+
+        // récupère le nouveau mot de passe
+        $newPassword = $_POST['memberNewPassword'];
+        // récupère la confirmation du nouveau mot de passe
+        $confirmNewPassword = $_POST['memberConfirmNewPassword'];
+        // récupère l'identifiant
+        $id = $_POST['id'];
+
+        if ($newPassword && $confirmNewPassword && strcmp($newPassword, $confirmNewPassword) == 0) {
+            // récupère le membre en BDD
+            $membre = $memberController->getByIdRecup($id);
+
+            if ($membre) {
+                $memberController->changePassword($id, $newPassword);
+            } else {
+                echo '<script type="text/javascript">'; 
+                echo 'alert("Ce compte utilisateur n\'existe pas en BDD.");';
+                echo 'window.location.href = "../MotDePasseOublie.php?id='.$id.'";';
+                echo '</script>';
+            }
+        } else {
+            echo '<script type="text/javascript">'; 
+            echo 'alert("Les mots de passe ne correspondent pas.");';
+            echo 'window.location.href = "../MotDePasseOublie.php?id='.$id.'&reset=true";';
+            echo '</script>';
+        }
+    } 
+
 ?>
