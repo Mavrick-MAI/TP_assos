@@ -113,14 +113,14 @@
         /**
          * Récupère la liste complète des livres
          */
-		function getListBook() {
+		function getListBook($search) {
             
             //créer la connexion à la BDD
             $dbConnexion = Connexion::getConnexion();
 
             try {
                 // créer la requête sql
-                $request = "SELECT * FROM book";
+                $request = "SELECT * FROM book WHERE title LIKE '%$search%'";
 
                 // prépare et exécute la requête 
                 $stmt = $dbConnexion->prepare($request);

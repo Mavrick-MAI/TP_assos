@@ -59,6 +59,19 @@
     } 
 
     /**
+     * Soumission d'un formulaire de recherche d'un livre
+     */
+    if (isset($_POST['recherche'])) {
+
+        // récupère les informations du formulaire
+        $input = $_POST['search'];
+
+        $_SESSION['search'] = $bookController->getList($input);
+        header("Location:../ListeLivres.php");
+        
+    } 
+
+    /**
      * Soumission d'un formulaire de modification de livre
      */
     if (isset($_POST['ModifierLivre'])) {

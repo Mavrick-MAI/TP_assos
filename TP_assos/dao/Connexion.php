@@ -16,12 +16,12 @@
          * 
         * @var string $userName
         */ 
-        private static $userName = "test";
+        private static $userName = "root";
         /**
          * Le mot de passe
         * @var string $password
         */ 
-        private static $password = "test";
+        private static $password = "";
         /**
          * Le nom de la base de donnée
          * 
@@ -34,7 +34,7 @@
          */
         public static function getConnexion() {
             try {
-                $connexion = new PDO("mysql:host=".self::$serverName.";port=3307;dbname=".self::$dbName, self::$userName, self::$password);
+                $connexion = new PDO("mysql:host=".self::$serverName.";dbname=".self::$dbName, self::$userName, self::$password);
                 $connexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 
             } catch(PDOException $e) {

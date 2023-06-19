@@ -9,8 +9,12 @@
     // créer le controller des livres
     $bookController = new BookController();
 
-    // récupère la liste des livres
-    $listBook = $bookController->getList();
+    if (!isset($_SESSION['search'])) {
+        // récupère la liste des livres
+        $listBook = $bookController->getList('');
+    } else {
+        $listBook = $_SESSION['search'];
+    }
     // récupère la liste des noms des colonnes
     $columnsNames = array_keys($listBook[0]);
 ?>
@@ -19,6 +23,10 @@
 
     <h1 class="my-4 text-center">Liste des livres</h1>
     
+    <form class="mb-2 me-2" action="./controller/FormHandler.php" method="post" style="float:left;">
+        <input type="text" name="search">
+        <input class="btn btn-primary" type="submit" name="recherche" value="Rechercher">
+    </form>
     <?php if (isset($_SESSION['user'])) : ?>
         <div class="text-left mb-2">
             <a class="btn btn-primary" href="Livre.php?type=Ajouter" role="button">Ajouter un livre</a>

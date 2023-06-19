@@ -15,13 +15,13 @@
         /**
          * Récupère la liste des livres
          */
-        function getList() {
+        function getList($pSearch) {
 
             // créer le dao des livres
             $bookDao = new BookDao();
 
             // récupère la liste des livres en BDD
-            $listBook = $bookDao->getListBook();
+            $listBook = $bookDao->getListBook($pSearch);
 
             // les livres sont des tableaux avec index
             // itére sur la liste de livre
