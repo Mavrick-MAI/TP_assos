@@ -7,7 +7,7 @@ Télécharger le dossier "TP_assos" ainsi que le fichier "tp_assos.sql" sur votr
 Il faut à présent déplacer le dossier "TP_assos" dans le dossier "htdocs" de votre XAMPP (chemin par defaut : C:\xampp\htdocs)
 
 ### 3. Importer la base de donnée
-Maintenant, lancer XAMPP, lance les modules "Apache" et "MySQL".
+Maintenant, lancer XAMPP, lance les modules "Apache" et "MySQL".  
 Dans votre navigateur web favori, taper dans l'url "localhost" et appuyer sur "Entrée".
 Cliquer ensuite sur "phpMyAdmin".
 Créer une base de données en cliquant sur "Nouvelle base de données" dans le menu à gauche.
